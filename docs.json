@@ -16,6 +16,7 @@
           {
             "group": "Getting started",
             "pages": [
+              "procedure",
               "index",
               "quickstart",
               "development"
