@@ -1,33 +1,66 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'BNPL системийн API endpoint-уудын ерөнхий танилцуулга ба authentication'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Танилцуулга (Overview)
 
-## Welcome
+Энэхүү API Reference нь **BNPL (Buy Now, Pay Later)** үйлчилгээний хүрээнд
+хэрэглэгч, худалдаачин болон санхүүгийн байгууллагуудын хооронд
+өгөгдөл солилцох **RESTful API endpoint-уудыг** тайлбарлана.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+BNPL API нь дараах үндсэн үйл ажиллагааг дэмжинэ:
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+- Хэрэглэгчийн бүртгэл ба баталгаажуулалт
+- BNPL төлбөрийн хүсэлт үүсгэх
+- Зээлийн нөхцөл, хуваарь авах
+- Гүйлгээний төлөв шалгах
+- Төлөлтийн мэдээлэл шинэчлэх
+
+Энэхүү хэсэг нь API-г **хэрэглэхээс өмнөх суурь ойлголтыг** өгөх зорилготой.
+
+---
+
+## API Баримтжуулалтын бүтэц
+
+BNPL API Reference нь дараах байдлаар зохион байгуулагдсан:
+
+- **Introduction** – Ерөнхий ойлголт, authentication
+- **Authentication** – Нэвтрэх эрхийн механизм
+- **Endpoints** – Тухайн үйлдэл бүрийн API endpoint
+- **Request / Response** – Жишээ JSON өгөгдөл
+- **Error Codes** – Алдааны тайлбар
+
+> Энэхүү баримт бичиг нь **лавлагааны (reference)** зориулалттай бөгөөд  
+> API хэрхэн ажилладагийг тайлбарлах биш, **яаж ашиглахыг** тодорхойлно.
+
+---
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+BNPL API нь **endpoint-ийн зориулалтаас хамааран** хоёр төрлийн
+баталгаажуулалтын механизмыг ашигладаг.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+### Supported Authentication Methods
+
+| Authentication төрөл | Ашиглагдах нөхцөл |
+|---------------------|------------------|
+| **Basic Authentication** | Систем хоорондын анхны итгэлцэл |
+| **Bearer Token Authentication** | Хэрэглэгчийн баталгаажсан үйлдлүүд |
+
+---
+
+### 1. Basic Authentication
+
+Basic Authentication нь ихэвчлэн:
+
+- Merchant систем
+- Partner систем
+- Backend-to-backend интеграци
+
+зэрэг **сервер хоорондын** API хүсэлтэд ашиглагдана.
+
+#### Request Header жишээ
+
+```http
+Authorization: Basic base64(username:password)
