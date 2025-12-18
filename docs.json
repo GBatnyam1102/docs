@@ -36,10 +36,10 @@
           {
             "group": "Endpoint examples",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/get-user",
+              "api-reference/endpoint/create-user",
+              "api-reference/endpoint/create-additional-info",
+              "api-reference/endpoint/get-additional-info"
             ]
           }
         ]
