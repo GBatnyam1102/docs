@@ -2,61 +2,34 @@
   "openapi": "3.1.0",
   "info": {
     "title": "BNPL API",
-    "description": "BNPL системийн харилцагч лавлах болон үүсгэх API",
-    "version": "1.0.0",
-    "license": {
-      "name": "MIT"
-    }
+    "description": "BNPL системийн харилцагч лавлах, үүсгэх, нэмэлт мэдээлэл бүртгэх API",
+    "version": "1.0.0"
   },
   "servers": [
     {
       "url": "https://api.example.com"
     }
   ],
+
   "paths": {
     "/bnpl/info/user": {
       "get": {
         "summary": "Харилцагч лавлах",
-        "description": "Харилцагчийн мэдээллийг регистрийн дугаараар лавлах. Давхардсан харилцагч илэрвэл `DUP_` prefix-тэй утга буцаана.",
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ],
+        "security": [{ "basicAuth": [] }],
         "parameters": [
           {
             "name": "register",
             "in": "query",
             "required": true,
-            "description": "Харилцагчийн регистрийн дугаар",
-            "schema": {
-              "type": "string",
-              "example": "ХХ00112233"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Харилцагчийн мэдээлэл",
+            "description": "Амжилттай",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserLookupResponse"
-                },
-                "example": {
-                  "value": {
-                    "userId": 269912,
-                    "mobileNumber": "88888888",
-                    "registerCode": "ИИ96112917",
-                    "firstName": "Батням",
-                    "lastName": "Гантулга",
-                    "userAcct": null
-                  },
-                  "data": null,
-                  "msgList": [],
-                  "attrs": {},
-                  "status": "Success"
-                }
+                "schema": { "$ref": "#/components/schemas/UserLookupResponse" }
               }
             }
           }
@@ -67,114 +40,72 @@
     "/bnpl/merge/user": {
       "post": {
         "summary": "Харилцагч үүсгэх",
-        "description": "Харилцагч бүртгэлтэй бол ID-г буцаана. Бүртгэлгүй бол шинээр үүсгээд ID буцаана.",
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ],
+        "security": [{ "basicAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserRequest"
-              },
-              "example": {
-                "mobileNumber": "88888888",
-                "registerCode": "ИИ96112917",
-                "firstName": "Батням",
-                "lastName": "Гантулга",
-                "userAcct": "1234567890"
-              }
+              "schema": { "$ref": "#/components/schemas/CreateUserRequest" }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Харилцагч амжилттай үүссэн",
+            "description": "Амжилттай",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateUserResponse"
-                },
-                "example": {
-                  "value": 269912,
-                  "data": null,
-                  "msgList": [],
-                  "attrs": {},
-                  "status": "Success"
-                }
+                "schema": { "$ref": "#/components/schemas/CreateUserResponse" }
               }
             }
           }
         }
       }
     },
+
     "/bnpl/additional/merge": {
       "post": {
         "summary": "Харилцагчийн нэмэлт мэдээлэл үүсгэх",
-        "description": "Харилцагчийн нэмэлт мэдээллийг бүртгэнэ. Харилцагч өмнө нь үүссэн бол тухайн ID ашиглана.",
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ],
+        "security": [{ "basicAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdditionalInfoRequest"
-              },
-              "example": {
-                "userId": 269912,
-                "facebook": "Тест хаяг",
-                "mobile1": "99669966",
-                "mobile2": "99669966",
-                "familyList": [
-                  {
-                    "relType": "Ээж",
-                    "lastName": "Овог",
-                    "firstName": "Нэр",
-                    "workplaceName": "Ажлын газар",
-                    "mobile": "94949494"
-                  }
-                ],
-                "emergencyList": [
-                  {
-                    "relType": "Найз",
-                    "lastName": "Найз овог",
-                    "firstName": "Найз нэр",
-                    "workplaceName": "Найз ажлын газар",
-                    "mobile": "96969696"
-                  },
-                  {
-                    "relType": "Найз",
-                    "lastName": "Найз овог",
-                    "firstName": "Найз нэр",
-                    "workplaceName": "Найз ажлын газар",
-                    "mobile": "96969696"
-                  }
-                ]
-              }
+              "schema": { "$ref": "#/components/schemas/AdditionalInfoRequest" }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Амжилттай бүртгэгдсэн",
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StandardSuccessResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/bnpl/additional/info": {
+      "get": {
+        "summary": "Харилцагчийн нэмэлт мэдээлэл лавлах",
+        "security": [{ "basicAuth": [] }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StandardSuccessResponse"
-                },
-                "example": {
-                  "value": null,
-                  "data": null,
-                  "msgList": [],
-                  "attrs": {},
-                  "status": "Success"
+                  "$ref": "#/components/schemas/AdditionalInfoResponse"
                 }
               }
             }
@@ -196,63 +127,20 @@
       "UserLookupResponse": {
         "type": "object",
         "properties": {
-          "value": {
-            "$ref": "#/components/schemas/User"
-          },
-          "data": {
-            "type": ["object", "null"]
-          },
-          "msgList": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "attrs": {
-            "type": "object"
-          },
-          "status": {
-            "type": "string",
-            "example": "Success"
-          }
+          "value": { "$ref": "#/components/schemas/User" },
+          "status": { "type": "string" }
         }
       },
 
       "User": {
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "integer",
-            "description": "Харилцагчийн дугаар"
-          },
-          "mobileNumber": {
-            "type": "string",
-            "description": "Утасны дугаар"
-          },
-          "registerCode": {
-            "type": "string",
-            "description": "Регистрийн дугаар"
-          },
-          "firstName": {
-            "type": "string",
-            "description": "Нэр"
-          },
-          "lastName": {
-            "type": "string",
-            "description": "Овог"
-          },
-          "userAcct": {
-            "type": ["string", "null"],
-            "description": "Дансны дугаар"
-          }
-        },
-        "required": [
-          "userId",
-          "mobileNumber",
-          "registerCode",
-          "firstName",
-          "lastName"
-        ]
+          "userId": { "type": "integer" },
+          "mobileNumber": { "type": "string" },
+          "registerCode": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" }
+        }
       },
 
       "CreateUserRequest": {
@@ -265,80 +153,22 @@
           "userAcct"
         ],
         "properties": {
-          "mobileNumber": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 8,
-            "description": "Утасны дугаар"
-          },
-          "registerCode": {
-            "type": "string",
-            "minLength": 10,
-            "maxLength": 10,
-            "description": "Регистрийн дугаар"
-          },
-          "firstName": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 50
-          },
-          "lastName": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 50
-          },
-          "userAcct": {
-            "type": "string",
-            "description": "Дансны дугаар"
-          },
-          "familyName": {
-            "type": "string"
-          },
-          "refMobile": {
-            "type": "string"
-          },
-          "refMobile1": {
-            "type": "string"
-          },
-          "eduLevelId": {
-            "type": "string",
-            "enum": ["1", "2", "4", "5", "6"]
-          },
-          "work": {
-            "type": "string"
-          },
-          "address": {
-            "type": "string"
-          }
+          "mobileNumber": { "type": "string" },
+          "registerCode": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "userAcct": { "type": "string" }
         }
       },
 
       "CreateUserResponse": {
         "type": "object",
-        "required": ["value", "status"],
         "properties": {
-          "value": {
-            "type": "integer",
-            "description": "Харилцагчийн дугаар"
-          },
-          "data": {
-            "type": ["object", "null"]
-          },
-          "msgList": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "attrs": {
-            "type": "object"
-          },
-          "status": {
-            "type": "string",
-            "example": "Success"
-          }
+          "value": { "type": "integer" },
+          "status": { "type": "string" }
         }
       },
+
       "RelativeInfo": {
         "type": "object",
         "required": [
@@ -349,29 +179,50 @@
           "mobile"
         ],
         "properties": {
-          "relType": {
-            "type": "string",
-            "description": "Хэн болох"
+          "relType": { "type": "string" },
+          "lastName": { "type": "string" },
+          "firstName": { "type": "string" },
+          "workplaceName": { "type": "string" },
+          "mobile": { "type": "string" }
+        }
+      },
+
+      "AdditionalInfoRequest": {
+        "type": "object",
+        "required": ["userId", "familyList", "emergencyList"],
+        "properties": {
+          "userId": { "type": "integer" },
+          "facebook": { "type": "string" },
+          "mobile1": { "type": "string" },
+          "mobile2": { "type": "string" },
+          "familyList": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/RelativeInfo" }
           },
-          "lastName": {
-            "type": "string",
-            "description": "Овог"
-          },
-          "firstName": {
-            "type": "string",
-            "description": "Нэр"
-          },
-          "workplaceName": {
-            "type": "string",
-            "description": "Ажлын газар"
-          },
-          "mobile": {
-            "type": "string",
-            "description": "Утасны дугаар"
+          "emergencyList": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/RelativeInfo" }
           }
         }
-      }
+      },
 
+      "AdditionalInfoResponse": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/AdditionalInfoRequest"
+          },
+          "status": { "type": "string" }
+        }
+      },
+
+      "StandardSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "value": { "type": ["integer", "null"] },
+          "status": { "type": "string" }
+        }
+      }
     }
   }
 }
