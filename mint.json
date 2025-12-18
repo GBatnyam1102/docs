@@ -1,0 +1,20 @@
+{
+  "theme": {
+    "colors": {
+      "callout": {
+        "note": {
+          "background": "#f6f6f3",
+          "border": "#9ca3af",
+          "title": "#374151",
+          "text": "#111827"
+        },
+        "warning": {
+          "background": "#fae502",
+          "border": "#facc15",
+          "title": "#92400e",
+          "text": "#111827"
+        }
+      }
+    }
+  }
+}
