@@ -47,7 +47,11 @@
               "api-reference/endpoint/invoice-cancel",
               "api-reference/endpoint/get-account-balance",
               "api-reference/endpoint/get-payment-info",
-              "api-reference/endpoint/post-payment"
+              "api-reference/endpoint/post-payment",
+              "api-reference/endpoint/create-merchant-loan",
+              "api-reference/endpoint/get-merchant-loan",
+              "api-reference/endpoint/merchant-account-cancel",
+              "api-reference/endpoint/get-merchant-loan"
             ]
           }
         ]

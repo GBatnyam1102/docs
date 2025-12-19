@@ -1530,7 +1530,596 @@
           }
         ]
       }
+    },
+    "/bnpl/getAccountBalanceDetail": {
+      "get": {
+        "summary": "Зээлийн дансны үлдэгдэл",
+        "description": "Зээлийн дансны үлдэгдэл болон гүйлгээний түүхийг лавлах",
+        "operationId": "getAccountBalanceDetail",
+        "tags": ["Зээл"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "description": "Дансны ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "properties": {
+                        "invoiceList": {
+                          "type": "array",
+                          "description": "Гүйлгээний жагсаалт",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "description": "ID",
+                                "example": 1206437
+                              },
+                              "INVOICE_DATE": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Огноо",
+                                "example": "2024-04-25"
+                              },
+                              "INVOICE_TYPE": {
+                                "type": "string",
+                                "description": "Төрөл",
+                                "enum": ["LOAN", "UNDUE_LOSS"],
+                                "example": "LOAN"
+                              },
+                              "INVOICE_TYPE_DESC": {
+                                "type": "string",
+                                "description": "Төрлийн тайлбар",
+                                "example": "Зээл"
+                              },
+                              "DESCRIPTION": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Утга",
+                                "example": "Эргэн төлөлт wallet-аас"
+                              },
+                              "ACCOUNT_ID": {
+                                "type": "integer",
+                                "description": "Зээлийн ID",
+                                "example": 182450
+                              },
+                              "DEBIT_AMOUNT": {
+                                "type": "number",
+                                "description": "Дэбит гүйлгээний дүн",
+                                "example": 133340
+                              },
+                              "CREDIT_AMOUNT": {
+                                "type": "number",
+                                "description": "Кредит гүйлгээний дүн",
+                                "example": 0
+                              },
+                              "CREATED_DATE": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Үүссэн огноо",
+                                "example": "2024-04-25 08:59:58"
+                              }
+                            },
+                            "required": ["ID", "INVOICE_DATE", "INVOICE_TYPE", "INVOICE_TYPE_DESC", "DESCRIPTION", "ACCOUNT_ID", "DEBIT_AMOUNT", "CREDIT_AMOUNT", "CREATED_DATE"]
+                          }
+                        },
+                        "scheduleList": {
+                          "type": "array",
+                          "description": "Төлбөрийн хуваарь",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "scheduleDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Төлөх огноо",
+                                "example": "2024-04-08"
+                              },
+                              "principal": {
+                                "type": "number",
+                                "description": "Үндсэн зээлийн дүн",
+                                "example": 133340
+                              },
+                              "loss": {
+                                "type": "number",
+                                "description": "Хугацаа хэтрэлтийн торгууль",
+                                "example": 5000
+                              },
+                              "paid": {
+                                "type": "number",
+                                "description": "Төлсөн дүн",
+                                "example": 138340
+                              },
+                              "remain": {
+                                "type": "number",
+                                "description": "Хүлээгдэж буй төлөлт",
+                                "example": 0
+                              },
+                              "isPaid": {
+                                "type": "integer",
+                                "description": "Төлбөр төлөгдсөн эсэх",
+                                "enum": [0, 1],
+                                "example": 1
+                              }
+                            },
+                            "required": ["scheduleDate", "principal", "loss", "paid", "remain", "isPaid"]
+                          }
+                        }
+                      },
+                      "required": ["invoiceList", "scheduleList"]
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/merchant/loan": {
+      "post": {
+        "summary": "Зээлийн хүсэлт үүсгэх",
+        "description": "Онлайн дэлгүүрээс зээлийн хүсэлт үүсгэх",
+        "operationId": "createMerchantLoan",
+        "tags": ["OnlineShop"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["storeId", "mobileNumber", "amount", "description"],
+                "properties": {
+                  "storeId": {
+                    "type": "integer",
+                    "description": "Дэлгүүрийн ID",
+                    "example": 210
+                  },
+                  "mobileNumber": {
+                    "type": "string",
+                    "description": "Утасны дугаар",
+                    "example": "15151515"
+                  },
+                  "amount": {
+                    "type": "integer",
+                    "description": "Нэхэмжлэхийн дүн",
+                    "example": 50000
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Нэхэмжлэхийн утга",
+                    "example": "API test"
+                  }
+                }
+              },
+              "example": {
+                "storeId": 210,
+                "mobileNumber": "15151515",
+                "amount": 50000,
+                "description": "API test"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "description": "Хүсэлтийн дугаар",
+                      "example": 182623
+                    },
+                    "data": {
+                      "nullable": true,
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object",
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Төлөв",
+                      "example": "Success"
+                    }
+                  },
+                  "required": ["value", "data", "msgList", "attrs", "status"]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/merchant/loan/check/{id}": {
+      "get": {
+        "summary": "Зээлийн хүсэлт зөвшөөрөгдсөн эсэх",
+        "description": "Зээлийн хүсэлт зөвшөөрөгдсөн эсэхийг шалгах",
+        "operationId": "checkMerchantLoan",
+        "tags": ["OnlineShop"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Зээлийн хүсэлтийн дугаар",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "boolean",
+                      "description": "Зөвшөөрөгдсөн эсэх",
+                      "example": true
+                    },
+                    "data": {
+                      "nullable": true,
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object",
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Төлөв",
+                      "example": "Success"
+                    }
+                  },
+                  "required": ["value", "data", "msgList", "attrs", "status"]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/merchant/account/cancel": {
+      "post": {
+        "summary": "Зээлийн хүсэлт цуцлах",
+        "description": "Мерчантын зээлийн хүсэлтийг цуцлах",
+        "operationId": "cancelMerchantAccount",
+        "tags": ["OnlineShop"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["accountId"],
+                "properties": {
+                  "accountId": {
+                    "type": "integer",
+                    "description": "Нэхэмжлэх ID",
+                    "example": 210111
+                  }
+                }
+              },
+              "example": {
+                "accountId": 210111
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "description": "Хүсэлтийн дугаар",
+                      "example": 182623
+                    },
+                    "data": {
+                      "nullable": true,
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object",
+                      "description": "Ашиглагдахгүй"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Төлөв",
+                      "example": "Success"
+                    }
+                  },
+                  "required": ["value", "data", "msgList", "attrs", "status"]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/merchant/loanList/{startDate}/{endDate}": {
+      "get": {
+        "summary": "Зээлийн жагсаалт",
+        "description": "Мерчантын зээлийн жагсаалтыг огноогоор лавлах",
+        "operationId": "getMerchantLoanList",
+        "tags": ["OnlineShop"],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "path",
+            "required": true,
+            "description": "Эхлэх огноо",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-08-10"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "path",
+            "required": true,
+            "description": "Дуусах огноо",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-08-30"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Зээлийн ID",
+                            "example": 182623
+                          },
+                          "mobileNumber": {
+                            "type": "string",
+                            "description": "Утасны дугаар",
+                            "example": "99150621"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Тайлбар",
+                            "example": "API test"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "description": "Дүн",
+                            "example": 50000
+                          },
+                          "ebarimtAmount": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Ебаримтын дүн"
+                          },
+                          "loanDate": {
+                            "type": "integer",
+                            "description": "Зээлийн огноо (timestamp)",
+                            "example": 1724256000000
+                          },
+                          "flag": {
+                            "type": "integer",
+                            "description": "Төлөв",
+                            "example": 1
+                          },
+                          "storeId": {
+                            "type": "integer",
+                            "description": "Дэлгүүрийн ID",
+                            "example": 210
+                          },
+                          "accountId": {
+                            "type": "integer",
+                            "description": "Дансны ID",
+                            "example": 182623
+                          },
+                          "storeName": {
+                            "type": "string",
+                            "description": "Дэлгүүрийн нэр",
+                            "example": "TestStore"
+                          },
+                          "branchName": {
+                            "type": "string",
+                            "description": "Салбарын нэр",
+                            "example": "TestBranch"
+                          },
+                          "merchantUsername": {
+                            "type": "string",
+                            "description": "Мерчантын хэрэглэгчийн нэр",
+                            "example": "ESHOP"
+                          },
+                          "merchantDescription": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Мерчантын тайлбар"
+                          },
+                          "createdDate": {
+                            "type": "integer",
+                            "description": "Үүсгэсэн огноо (timestamp)",
+                            "example": 1724310785785
+                          },
+                          "rownum_": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "Мөрийн дугаар"
+                          }
+                        }
+                      }
+                    },
+                    "pageable": {
+                      "type": "object",
+                      "properties": {
+                        "sort": {
+                          "type": "object",
+                          "properties": {
+                            "sorted": {
+                              "type": "boolean"
+                            },
+                            "unsorted": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "pageSize": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "pageNumber": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "paged": {
+                          "type": "boolean"
+                        },
+                        "unpaged": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "last": {
+                      "type": "boolean"
+                    },
+                    "totalPages": {
+                      "type": "integer"
+                    },
+                    "totalElements": {
+                      "type": "integer"
+                    },
+                    "first": {
+                      "type": "boolean"
+                    },
+                    "sort": {
+                      "type": "object",
+                      "properties": {
+                        "sorted": {
+                          "type": "boolean"
+                        },
+                        "unsorted": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "size": {
+                      "type": "integer"
+                    },
+                    "number": {
+                      "type": "integer"
+                    },
+                    "numberOfElements": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
+
   },
   "components": {
     "securitySchemes": {
@@ -1538,6 +2127,11 @@
         "type": "http",
         "scheme": "basic",
         "description": "HTTP Basic Authentication. Username болон password-г base64 encode хийж Authorization header-т илгээнэ."
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Bearer token authentication. Authorization header-т Bearer token илгээнэ."
       }
     }
   }
