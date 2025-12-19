@@ -181,7 +181,74 @@
           }
         }
       }
+    },
+    "/bnpl/additional/get":{
+      "get":{
+        "summary":"Харилцагчийн нэмэлт мэдээллийг лавлах",
+        "description":"Харицагч үүссэн бол үүссэн харилцагчийн ID-г, үүссээгүй бол харицлагч шинээр үүсгэж ID-г буцаана",
+        "security":[
+          {
+            "basicAuth":[]
+          }
+        ],
+        "parameters":[
+          {
+            "required":true,
+            "userId": "Харилцагчийн дугаар",
+            "schema":{
+              "type":"string",
+              "example":"269912"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Харилцагчийн нэмэлт мэдээлэл",
+            "content": {
+              "application/json": {
+                "example": {
+                  "value": {
+                      "userId": 269912,
+                      "facebook": "Тест хаяг",
+                      "mobile1": "99669966",
+                      "mobile2": "99669966",
+                      "familyList": [
+                          {
+                              "relType": "Ээж",
+                              "lastName": "Овог",
+                              "firstName": "Нэр",
+                              "workplaceName": "Ажлын газар",
+                              "mobile": "94949494"
+                          }
+                      ],
+                      "emergencyList": [
+                          {
+                              "relType": "Найз 2",
+                              "lastName": "Найз овог 2",
+                              "firstName": "Найз нэр 2",
+                              "workplaceName": "Найз ажлын газар",
+                              "mobile": "96969696"
+                          },
+                          {
+                              "relType": "Найз 1",
+                              "lastName": "Найз 1 овог",
+                              "firstName": "Найз 1 нэр",
+                              "workplaceName": "Найз 1 ажлын газар",
+                              "mobile": "96969696"
+                          }
+                      ]
+                  },
+                  "data": null,
+                  "msgList": [],
+                  "attrs": {},
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        }
     }
+   }
   },
 
   "components": {
