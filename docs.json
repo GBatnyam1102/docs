@@ -39,7 +39,15 @@
               "api-reference/endpoint/get-user",
               "api-reference/endpoint/create-user",
               "api-reference/endpoint/create-additional-info",
-              "api-reference/endpoint/get-additional-info"
+              "api-reference/endpoint/get-additional-info",
+              "api-reference/endpoint/create-score",
+              "api-reference/endpoint/get-score",
+              "api-reference/endpoint/get-invoice",
+              "api-reference/endpoint/create-pending",
+              "api-reference/endpoint/invoice-cancel",
+              "api-reference/endpoint/get-account-balance",
+              "api-reference/endpoint/get-payment-info",
+              "api-reference/endpoint/post-payment"
             ]
           }
         ]

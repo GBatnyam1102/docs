@@ -563,6 +563,973 @@
           }
         ]
       }
+    },
+    "/bnpl/set/score": {
+  "post": {
+    "summary": "Харилцагчийн зээлийн эрх үүсгэх",
+    "description": "Харилцагч дээр зээлийн эрх үүссэн байвал хүсэлтээр ирүүлсэн amount хэмжээгээр шинэчилнэ.",
+    "operationId": "setScore",
+    "tags": ["Харилцагч"],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["userId", "amount"],
+            "properties": {
+              "userId": {
+                "type": "integer",
+                "description": "Харилцагчийн дугаар",
+                "example": 123456
+              },
+              "amount": {
+                "type": "number",
+                "description": "Эрхийн хэмжээ",
+                "example": 100000
+              }
+            }
+          },
+          "example": {
+            "userId": 123456,
+            "amount": 100000
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Амжилттай",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "nullable": true
+                },
+                "data": {
+                  "nullable": true
+                },
+                "msgList": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "attrs": {
+                  "type": "object"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "basicAuth": []
+      }
+    ]
+  }
+    },
+    "/bnpl/get/score": {
+      "get": {
+        "summary": "Харилцагчийн зээлийн эрх лавлах",
+        "description": "Харилцагчийн зээлийн эрхийн мэдээллийг лавлах",
+        "operationId": "getScore",
+        "tags": ["Харилцагч"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "Харилцагчийн дугаар",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "properties": {
+                        "hasScore": {
+                          "type": "integer",
+                          "description": "Эрх үүссэн эсэх (deprecated)",
+                          "deprecated": true,
+                          "enum": [0, 1],
+                          "example": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Эрхийн төлөв",
+                          "enum": ["APPROVED", "DENIED", "PENDING", "PROCESSING"],
+                          "example": "APPROVED"
+                        },
+                        "rejectReason": {
+                          "type": "string",
+                          "description": "Татгалзсан шалтгаан",
+                          "example": ""
+                        },
+                        "possibleAmount": {
+                          "type": "number",
+                          "description": "Боломжит эрх",
+                          "example": 3400000
+                        },
+                        "totalAmount": {
+                          "type": "number",
+                          "description": "Нийт эрх",
+                          "example": 4000000
+                        },
+                        "createdDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Үүсгэсэн огноо",
+                          "example": "2024-04-05 13:40:37"
+                        },
+                        "updatedDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Өөрчилсөн огноо",
+                          "example": "2024-04-05 13:43:00"
+                        },
+                        "cibLastUpdatedDate": {
+                          "type": "string",
+                          "format": "date",
+                          "description": "Сүүлийн ЗМС лавлагаа авсан огноо",
+                          "example": "2024-04-05"
+                        },
+                        "danLastUpdatedDate": {
+                          "type": "string",
+                          "format": "date",
+                          "description": "Сүүлийн ДАН лавлагаа авсан огноо",
+                          "example": "2024-04-05"
+                        }
+                      },
+                      "required": ["status", "rejectReason", "possibleAmount", "totalAmount"]
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/bnpl/invoice/getPending": {
+      "post": {
+        "summary": "Хүлээгдэж буй нэхэмжлэх лавлах",
+        "description": "Харилцагчийн хүлээгдэж буй нэхэмжлэхийг лавлах",
+        "operationId": "getPendingInvoice",
+        "tags": ["Нэхэмжлэх"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId"],
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "description": "Харилцагчийн дугаар",
+                    "example": 200500
+                  }
+                }
+              },
+              "example": {
+                "userId": 200500
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "properties": {
+                        "accountId": {
+                          "type": "integer",
+                          "description": "Нэхэмжлэхийн дугаар",
+                          "example": 182563
+                        },
+                        "storeId": {
+                          "type": "integer",
+                          "description": "Мерчантын ID",
+                          "example": 210
+                        },
+                        "storeName": {
+                          "type": "string",
+                          "description": "Мерчантын нэр",
+                          "example": "TestStore"
+                        },
+                        "storeLogo": {
+                          "type": "string",
+                          "description": "Мерчантын лого",
+                          "example": "https://bnpl.easypay.mn/test-static/TestStore_1723604163767_image.jpg"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Тайлбар",
+                          "example": "Test"
+                        },
+                        "amount": {
+                          "type": "number",
+                          "description": "Нэхэмжлэхийн дүн",
+                          "example": 1000000
+                        },
+                        "createdDatetime": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Үүсгэсэн огноо",
+                          "example": "2024-06-06 02:45:56.67"
+                        }
+                      },
+                      "required": ["accountId", "storeId", "storeName", "amount", "createdDatetime"]
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/bnpl/invoice/list": {
+      "get": {
+        "summary": "Нэхэмжлэхийн жагсаалт",
+        "description": "Хугацаа хэтрэлттэй ERP-руу нийлүүлэгдсэн зээлийн хувьд flag нь SUPPLIED гэж буцаана. paymentDetail object-д нэмэлтээр талбарууд нэмэгдэх ба уг мэдээллийг ERP системээс лавлаж буцаана.",
+        "operationId": "getInvoiceList",
+        "tags": ["Нэхэмжлэх"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "Харилцагчийн дугаар",
+            "schema": {
+              "type": "integer",
+              "example": 269970
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Хайлт (Талбар1:Утга1,Талбар2:Утга2)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "required": false,
+            "description": "Flag-р хайх талбар",
+            "schema": {
+              "type": "string",
+              "example": "CONFIRMED,SUPPLIED"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Хуудасны дугаар",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "description": "Хуудасны хэмжээ",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "example": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Эрэмбэ",
+            "schema": {
+              "type": "string",
+              "example": "amount,ASC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "Нэхэмжлэхийн дугаар",
+                                "example": 183183
+                              },
+                              "storeId": {
+                                "type": "integer",
+                                "description": "Мерчантын ID",
+                                "example": 6373
+                              },
+                              "storeName": {
+                                "type": "string",
+                                "description": "Мерчантын нэр",
+                                "example": "Test store"
+                              },
+                              "storeLogo": {
+                                "type": "string",
+                                "description": "Мерчантын лого",
+                                "example": "https://bnpl.easypay.mn/test-static/NT%20shop_1715221518811_logo.png"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Нэхэмжлэхийн утга",
+                                "example": "ip16 128"
+                              },
+                              "amount": {
+                                "type": "number",
+                                "description": "Нэхэмжлэхийн дүн",
+                                "example": 3780000
+                              },
+                              "statusId": {
+                                "type": "integer",
+                                "description": "Зээлийн төлөв",
+                                "enum": [1000, 1001],
+                                "example": 1000
+                              },
+                              "statusDesc": {
+                                "type": "string",
+                                "description": "Зээлийн төлөвийн тайлбар",
+                                "example": "Төлж дуусаагүй"
+                              },
+                              "numberOfPayment": {
+                                "type": "integer",
+                                "description": "Хуваан төлөх тоо",
+                                "example": 7
+                              },
+                              "loanServiceDesc": {
+                                "type": "string",
+                                "description": "Хуваан төлөх нөхцөл",
+                                "example": "90 хоногт 7 хуваах"
+                              },
+                              "userId": {
+                                "type": "integer",
+                                "description": "Хэрэглэгчийн дугаар",
+                                "example": 269912
+                              },
+                              "classCode": {
+                                "type": "string",
+                                "description": "Зээлийн ангилал",
+                                "example": "OVERDUE"
+                              },
+                              "flag": {
+                                "type": "string",
+                                "description": "Нэхэмжлэхийн төлөв",
+                                "enum": ["PENDING", "CONFIRMED", "CANCELLED", "SUPPLIED"],
+                                "example": "SUPPLIED"
+                              },
+                              "createdDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Нэхэмжлэх үүсгэсэн огноо",
+                                "example": "2024-12-12"
+                              },
+                              "createdDatetime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Нэхэмжлэх үүсгэсэн огноо (Цагтай)",
+                                "example": "2024-12-12 10:20:58"
+                              },
+                              "confirmDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Баталсан огноо",
+                                "example": "2024-12-12",
+                                "nullable": true
+                              },
+                              "confirmDateTime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Баталсан огноо (Цагтай)",
+                                "example": "2024-12-12 10:21:52",
+                                "nullable": true
+                              },
+                              "endDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Зээл төлж дуусах огноо",
+                                "example": "2025-03-12",
+                                "nullable": true
+                              },
+                              "closedDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Зээл хаасан огноо",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "closedDatetime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Зээл хаасан огноо (Цагтай)",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "pBal": {
+                                "type": "number",
+                                "description": "Хүүгийн үлдэгдэл",
+                                "example": 2701119
+                              },
+                              "lBal": {
+                                "type": "number",
+                                "description": "Үндсэн зээлийн үлдэгдэл",
+                                "example": 230000
+                              },
+                              "ROWNUM_": {
+                                "type": "integer",
+                                "description": "Мөрийн дугаар",
+                                "example": 19
+                              },
+                              "paymentDetail": {
+                                "type": "object",
+                                "nullable": true,
+                                "description": "Төлбөрийн дэлгэрэнгүй мэдээлэл",
+                                "properties": {
+                                  "loanFee": {
+                                    "type": "number",
+                                    "description": "ХХ-н алданги (BNPL талд тооцсон)",
+                                    "example": 3000
+                                  },
+                                  "totalPayIncreasedInterest": {
+                                    "type": "number",
+                                    "description": "Нэмэгдүүлсэн хүүний дүн",
+                                    "example": 3000
+                                  },
+                                  "IncreasedInterestPercent": {
+                                    "type": "number",
+                                    "description": "Нэмэгдүүлсэн хүү %",
+                                    "example": 1.6
+                                  },
+                                  "totalPayInterest": {
+                                    "type": "number",
+                                    "description": "Үндсэн зээлийн хүүний дүн",
+                                    "example": 3000
+                                  },
+                                  "interestPercent": {
+                                    "type": "number",
+                                    "description": "Үндсэн зээлийн хүү %",
+                                    "example": 3.5
+                                  },
+                                  "loanBalance": {
+                                    "type": "number",
+                                    "description": "Үндсэн зээлийн үлдэгдэл",
+                                    "example": 3000
+                                  },
+                                  "closeAmount": {
+                                    "type": "number",
+                                    "description": "Хаасан дүн",
+                                    "example": 0
+                                  },
+                                  "payAmount": {
+                                    "type": "number",
+                                    "description": "Төлсөн дүн",
+                                    "example": 0
+                                  }
+                                }
+                              }
+                            },
+                            "required": ["id", "storeId", "storeName", "amount", "statusId", "statusDesc", "userId", "classCode", "flag", "createdDate", "createdDatetime"]
+                          }
+                        },
+                        "pageable": {
+                          "type": "object",
+                          "properties": {
+                            "sort": {
+                              "type": "object",
+                              "properties": {
+                                "sorted": {
+                                  "type": "boolean"
+                                },
+                                "unsorted": {
+                                  "type": "boolean"
+                                },
+                                "empty": {
+                                  "type": "boolean"
+                                }
+                              }
+                            },
+                            "pageNumber": {
+                              "type": "integer"
+                            },
+                            "pageSize": {
+                              "type": "integer"
+                            },
+                            "offset": {
+                              "type": "integer"
+                            },
+                            "paged": {
+                              "type": "boolean"
+                            },
+                            "unpaged": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "last": {
+                          "type": "boolean"
+                        },
+                        "totalElements": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        },
+                        "first": {
+                          "type": "boolean"
+                        },
+                        "numberOfElements": {
+                          "type": "integer"
+                        },
+                        "size": {
+                          "type": "integer"
+                        },
+                        "number": {
+                          "type": "integer"
+                        },
+                        "sort": {
+                          "type": "object",
+                          "properties": {
+                            "sorted": {
+                              "type": "boolean"
+                            },
+                            "unsorted": {
+                              "type": "boolean"
+                            },
+                            "empty": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "empty": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/bnpl/invoice/cancel": {
+      "post": {
+        "summary": "Нэхэмжлэх цуцлах",
+        "description": "Харилцагчийн нэхэмжлэхийг цуцлах",
+        "operationId": "cancelInvoice",
+        "tags": ["Нэхэмжлэх"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["accountId", "userId"],
+                "properties": {
+                  "accountId": {
+                    "type": "integer",
+                    "description": "Нэхэмжлэхийн дугаар",
+                    "example": 182289
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "description": "Харилцагчийн дугаар",
+                    "example": 200500
+                  }
+                }
+              },
+              "example": {
+                "accountId": 182289,
+                "userId": 200500
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "nullable": true
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/bnpl/paymentInfo": {
+      "post": {
+        "summary": "Төлбөрийн мэдээлэл лавлах",
+        "description": "Зээлийн төлбөрийн мэдээлэл болон хуваарийг лавлах",
+        "operationId": "getPaymentInfo",
+        "tags": ["Төлбөр"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["accountId", "userId"],
+                "properties": {
+                  "accountId": {
+                    "type": "integer",
+                    "description": "Нэхэмжлэхийн дугаар",
+                    "example": 182292
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "description": "Харилцагчийн дугаар",
+                    "example": 269912
+                  }
+                }
+              },
+              "example": {
+                "accountId": 182292,
+                "userId": 269912
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "properties": {
+                        "loanFee": {
+                          "type": "number",
+                          "nullable": true,
+                          "description": "ХХ-н алданги (BNPL талд тооцсон)"
+                        },
+                        "totalPayIncreasedInterest": {
+                          "type": "number",
+                          "nullable": true,
+                          "description": "Нэмэгдүүлсэн хүүний дүн"
+                        },
+                        "IncreasedInterestPercent": {
+                          "type": "number",
+                          "description": "Нэмэгдүүлсэн хүүгийн хувь"
+                        },
+                        "totalPayInterest": {
+                          "type": "number",
+                          "nullable": true,
+                          "description": "Үндсэн зээлийн хүүний дүн"
+                        },
+                        "interestPercent": {
+                          "type": "number",
+                          "description": "Үндсэн хүүгийн хувь"
+                        },
+                        "loanBalance": {
+                          "type": "number",
+                          "nullable": true,
+                          "description": "Үндсэн зээлийн үлдэгдэл"
+                        },
+                        "closeAmount": {
+                          "type": "number",
+                          "description": "Зээл хаах дүн",
+                          "example": 200000
+                        },
+                        "payAmount": {
+                          "type": "number",
+                          "description": "Одоогын төлөх дүн",
+                          "example": 50000
+                        },
+                        "scheduleList": {
+                          "type": "array",
+                          "description": "Төлбөрийн хуваарь",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "scheduleDate": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Төлөх огноо",
+                                "example": "2024-02-08"
+                              },
+                              "principal": {
+                                "type": "number",
+                                "description": "Үндсэн зээлийн дүн",
+                                "example": 50000
+                              },
+                              "loss": {
+                                "type": "number",
+                                "description": "Хугацаа хэтрэлтийн торгууль",
+                                "example": 0
+                              },
+                              "paid": {
+                                "type": "number",
+                                "description": "Төлсөн дүн",
+                                "example": 0
+                              },
+                              "remain": {
+                                "type": "number",
+                                "description": "Хүлээгдэж буй төлөлт",
+                                "example": 50000
+                              },
+                              "isPaid": {
+                                "type": "integer",
+                                "description": "Төлбөр төлөгдсөн эсэх",
+                                "enum": [0, 1],
+                                "example": 0
+                              }
+                            },
+                            "required": ["scheduleDate", "principal", "loss", "paid", "remain", "isPaid"]
+                          }
+                        }
+                      },
+                      "required": ["IncreasedInterestPercent", "interestPercent", "closeAmount", "payAmount", "scheduleList"]
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/bnpl/payment": {
+      "post": {
+        "summary": "Төлбөр төлөх",
+        "description": "Зээлийн төлбөр төлөх",
+        "operationId": "makePayment",
+        "tags": ["Төлбөр"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId", "accountId", "amount"],
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "description": "Харилцагчийн дугаар",
+                    "example": 200500
+                  },
+                  "accountId": {
+                    "type": "integer",
+                    "description": "Нэхэмжлэхийн дугаар",
+                    "example": 182289
+                  },
+                  "amount": {
+                    "type": "integer",
+                    "description": "Дүн",
+                    "example": 30000
+                  }
+                }
+              },
+              "example": {
+                "accountId": 182289,
+                "userId": 200500,
+                "amount": 30000
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Амжилттай",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "nullable": true
+                    },
+                    "data": {
+                      "nullable": true
+                    },
+                    "msgList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "attrs": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
