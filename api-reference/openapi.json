@@ -54,22 +54,22 @@
                         "mobileNumber": {
                           "type": "string",
                           "description": "Утасны дугаар",
-                          "example": "88805256"
+                          "example": "90082380"
                         },
                         "registerCode": {
                           "type": "string",
                           "description": "Регистрийн дугаар",
-                          "example": "ЕЛ96112917"
+                          "example": "ИИ99651452"
                         },
                         "firstName": {
                           "type": "string",
                           "description": "Нэр",
-                          "example": "Тэгшжаргал"
+                          "example": "Батням"
                         },
                         "lastName": {
                           "type": "string",
                           "description": "Овог",
-                          "example": "Мягмар"
+                          "example": "Гантулга"
                         },
                         "userAcct": {
                           "type": "string",
@@ -142,14 +142,14 @@
                     "description": "Нэр",
                     "minLength": 1,
                     "maxLength": 50,
-                    "example": "Тэгшжаргал"
+                    "example": "Батням"
                   },
                   "lastName": {
                     "type": "string",
                     "description": "Овог",
                     "minLength": 1,
                     "maxLength": 50,
-                    "example": "Мягмар"
+                    "example": "Гантулга"
                   },
                   "userAcct": {
                     "type": "string",
@@ -183,10 +183,10 @@
                 }
               },
               "example": {
-                "mobileNumber": "88805256",
-                "registerCode": "ЕЛ96112917",
-                "firstName": "Тэгшжаргал",
-                "lastName": "Мягмар"
+                "mobileNumber": "90082380",
+                "registerCode": "ИИ99651452",
+                "firstName": "Батням",
+                "lastName": "Гантулга"
               }
             }
           }
